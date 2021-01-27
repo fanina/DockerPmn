@@ -1,0 +1,45 @@
+version: "3.8"
+
+services: 
+  db: 
+    image: "mysql:8.0"
+    volumes:
+      - "dbapp:/var/lib/mysql"
+    environment: 
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - 127.0.0.1:3306:3306
+    restart: on-failure
+    networks:
+      - symfony_db_net
+
+  nginx: 
+    depends_on: 
+      - php
+    image: "nginx:1.19.0-alpine"
+    restart: on-failure
+    volumes:
+      - ./apps/my-symfony-app/:/var/www/my-symfony-app/
+    ports:
+      - 80:80
+    networks:
+      - symfony_db_net
+  php: 
+    build : 
+      context: "."
+      dockerfile: docker/php/Dockerfile
+    restart: on-failure
+    volumes:
+      - ./apps/my-symfony-app/:/usr/src/app/
+    networks:
+      - symfony_db_net
+      
+volumes:
+    dbapp:
+networks:
+    symfony_db_net:
+
+
