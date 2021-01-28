@@ -11,29 +11,27 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - 127.0.0.1:3306:3306
-    restart: on-failure
+      - 127.0.0.1:3307:3306
     networks:
       - symfony_db_net
 
   nginx: 
-    depends_on: 
-      - php
-    image: "nginx:1.19.0-alpine"
-    restart: on-failure
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
     volumes:
-      - ./apps/my-symfony-app/:/var/www/my-symfony-app/
+      - ./apps/my-symfony-app/:/usr/src/my-symfony-app/
     ports:
       - 80:80
     networks:
       - symfony_db_net
+
   php: 
     build : 
-      context: "."
+      context: .
       dockerfile: docker/php/Dockerfile
-    restart: on-failure
     volumes:
-      - ./apps/my-symfony-app/:/usr/src/app/
+      - ./apps/my-symfony-app/:/usr/src/my-symfony-app/
     networks:
       - symfony_db_net
       
