@@ -16,24 +16,24 @@ services:
       - symfony_db_net
 
   nginx: 
-    image : nginx:1.17.8-alpine
     build:
       context: .
-      dockerfile: docker/nginx/Dockerfile
-    volumes:
-      - ./docker/nginx/:/gateway/etc/nginx/conf.d
+      dockerfile: ./docker/nginx/Dockerfile
     ports:
       - 80:80
+    volumes:
+      - ./apps/my-symfony-app/:/var/www/app
     networks:
       - symfony_db_net
 
   php: 
-    image : php:7.4-fpm-buster
     build : 
       context: .
       dockerfile: docker/php/Dockerfile
     volumes:
-      - ./apps/my-symfony-app/:/usr/src/my-symfony-app/
+      - ./apps/my-symfony-app/:/var/www/app
+    expose: 
+      - 9000
     networks:
       - symfony_db_net
       
