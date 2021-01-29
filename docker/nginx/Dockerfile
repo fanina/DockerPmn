@@ -14,7 +14,7 @@ COPY ./default.conf /etc/nginx/conf.d
 ## Remove default nginx index page
 RUN rm -rf /usr/share/nginx/html/*
 
-#RUN echo "upstream php-upstream { server php:9000; }" > /etc/nginx/conf.d/upstream.conf
+RUN echo "upstream php-upstream { server php:9000; }" > /etc/nginx/conf.d/upstream.conf
 
 EXPOSE 80
 
